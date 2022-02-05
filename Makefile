@@ -11,13 +11,14 @@ SSRC = $(call rwildcard,./,*.s)
 OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(CSRC))
 OBJS += $(patsubst %.s, $(OBJDIR)/%.o, $(SSRC))
 
-CFLAGS = -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L152xE -c -I./core/include -I./Drivers/STM32L1xx_HAL_Driver/Inc -I./Drivers/STM32L1xx_HAL_Driver/Inc/Legacy -I./Drivers/CMSIS/Device/ST/STM32L1xx/Include -I./Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP --specs=nano.specs -mfloat-abi=soft -mthumb
+CFLAGS = -g -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L152xE -c -I./core/include -I./Drivers/STM32L1xx_HAL_Driver/Inc -I./Drivers/STM32L1xx_HAL_Driver/Inc/Legacy -I./Drivers/CMSIS/Device/ST/STM32L1xx/Include -I./Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP --specs=nano.specs -mfloat-abi=soft -mthumb
 LDFLAGS = -mcpu=cortex-m3 -TSTM32L152RETX_FLASH.ld --specs=nosys.specs -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb
 
 CC = arm-none-eabi-gcc
 LD = arm-none-eabi-gcc
 AS = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
+GDB = arm-none-eabi-gdb
 
 NUCLEO_DRIVE = /dev/sde
 
@@ -32,6 +33,12 @@ upload: app.bin
 	sudo mount $(NUCLEO_DRIVE) nucleo_mnt
 	sudo cp $(BUILDDIR)/app.bin nucleo_mnt/
 	sudo umount nucleo_mnt
+
+debug_util:
+	screen -dmS st_util st-util
+
+debug: debug_util
+	cd bin; $(GDB) app.elf -ex "target remote 127.0.0.1:4242" -ex "tui enable"  -ex "layout src" -ex "layout regs" -ex "hb *main" -ex "continue"
 
 clean:
 	rm -rf $(BUILDDIR) $(OBJDIR)
