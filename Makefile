@@ -20,7 +20,7 @@ AS = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 GDB = arm-none-eabi-gdb
 
-NUCLEO_DRIVE = /dev/sde
+NUCLEO_DRIVE = /dev/sdf
 
 app.bin: $(OBJS)
 	@mkdir -p $(BUILDDIR)
