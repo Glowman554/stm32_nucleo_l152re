@@ -32,6 +32,7 @@ upload: app.bin
 	@mkdir -p nucleo_mnt
 	sudo mount $(NUCLEO_DRIVE) nucleo_mnt
 	sudo cp $(BUILDDIR)/app.bin nucleo_mnt/
+	sleep 5
 	sudo umount nucleo_mnt
 
 debug_util:
