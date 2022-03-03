@@ -1,0 +1,17 @@
+mikf HAL_Delay(uint32 delay) -> void
+
+mikas setze_lichter(void* gpio_c, uint8 value) -> void {
+    strb r1, [r0, 0x14]
+	bx lr
+}
+
+mikf mikmain() -> void {
+	int gpio_c = 1073874944
+
+	while (1) {
+		setze_lichter(gpio_c, 255)
+		HAL_Delay(1000)
+		setze_lichter(gpio_c, 0)
+		HAL_Delay(1000)
+	}
+}
