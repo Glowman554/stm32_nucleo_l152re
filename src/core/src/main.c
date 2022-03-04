@@ -1,6 +1,6 @@
 #include "main.h"
 
-void mainasm(void) asm("mainasm");
+void __boot(void);
 
 UART_HandleTypeDef huart2;
 
@@ -17,10 +17,7 @@ int main(void)
 	MX_GPIO_Init();
 	MX_USART2_UART_Init();
 
-	mainasm();
-	while (1)
-	{
-	}
+	__boot();
 }
 
 /**

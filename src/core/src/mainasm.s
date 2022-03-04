@@ -4,10 +4,6 @@
 .include "./core/src/regs.s"
 .global mainasm
 mainasm:
-	mov r2, #Bit10
-	bl read_button
-	bne mikboot
-
 	mov R1, #0
 	mov R0, #1
 
@@ -75,9 +71,4 @@ delay:
 	bl HAL_Delay
 
 	pop {r0, pc}
-
-mikboot:
-	bl mikmain
-	b .
-
 #endif
