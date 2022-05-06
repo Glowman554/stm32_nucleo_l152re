@@ -1,4 +1,4 @@
-OBJDIR = ../lib
+OBJDIR = ../lib/core
 BUILDDIR = ../bin
 
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
@@ -10,8 +10,16 @@ OBJS = $(patsubst %.c, $(OBJDIR)/%.c.o, $(CSRC))
 OBJS += $(patsubst %.s, $(OBJDIR)/%.s.o, $(SSRC))
 OBJS += $(patsubst %.mik, $(OBJDIR)/%.mik.o, $(MIKSRC))
 
-CFLAGS = -g -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L152xE -c -I./core/include -I./Drivers/STM32L1xx_HAL_Driver/Inc -I./Drivers/STM32L1xx_HAL_Driver/Inc/Legacy -I./Drivers/CMSIS/Device/ST/STM32L1xx/Include -I./Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP --specs=nano.specs -mfloat-abi=soft -mthumb
-LDFLAGS = -mcpu=cortex-m3 -TSTM32L152RETX_FLASH.ld --specs=nosys.specs -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb
+INCLUDES = -I../driver/STM32L1xx_HAL_Driver/Inc \
+			-I../driver/STM32L1xx_HAL_Driver/Inc/Legacy \
+			-I../driver/CMSIS/Device/ST/STM32L1xx/Include \
+			-I../driver/CMSIS/Include \
+			-I../driver/CMSIS/Device/ST/STM32L1xx/Include \
+			-I../driver/CMSIS/Include \
+			-Iinclude
+
+CFLAGS = -g -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L152xE -c  -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage --specs=nano.specs -mfloat-abi=soft -mthumb $(INCLUDES)
+LDFLAGS = -mcpu=cortex-m3 -TSTM32L152RETX_FLASH.ld --specs=nosys.specs -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb $(BUILDDIR)/driver.o
 
 CC = arm-none-eabi-gcc
 LD = arm-none-eabi-gcc
@@ -39,7 +47,7 @@ debug_util:
 	screen -dmS st_util st-util
 
 debug: debug_util
-	cd bin; $(GDB) app.elf -ex "target remote 127.0.0.1:4242" -ex "tui enable"  -ex "layout src" -ex "layout regs" -ex "hb *main" -ex "continue"
+	cd ../bin; $(GDB) app.elf -ex "target remote 127.0.0.1:4242" -ex "tui enable"  -ex "layout src" -ex "layout regs" -ex "hb *main" -ex "continue"
 
 clean:
 	rm -rf $(BUILDDIR) $(OBJDIR)

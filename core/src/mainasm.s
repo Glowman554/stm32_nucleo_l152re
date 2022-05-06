@@ -1,7 +1,7 @@
 #if 1
 
 .syntax unified
-.include "./core/src/regs.s"
+.include "src/regs.s"
 .global mainasm
 mainasm:
 	mov R1, #0

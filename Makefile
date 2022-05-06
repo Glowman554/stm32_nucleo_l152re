@@ -1,14 +1,18 @@
-app.bin:
-	make -C src app.bin
+app.bin: build_driver
+	make -C core app.bin
 
-upload:
-	make -C src upload
+upload: build_driver
+	make -C core upload
 
 debug_util:
-	make -C src debug_util
+	make -C core debug_util
 
 debug:
-	make -C src debug
+	make -C core debug
 
 clean:
-	make -C src clean
+	make -C core clean
+	make -C driver clean
+
+build_driver:
+	make -C driver

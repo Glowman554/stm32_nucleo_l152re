@@ -1,7 +1,7 @@
 #if 1
 
 .syntax unified
-.include "./core/src/regs.s"
+.include "src/regs.s"
 .global __boot
 __boot:
 	mov r2, #Bit10
